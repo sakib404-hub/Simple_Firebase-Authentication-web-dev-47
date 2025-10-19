@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from '../../firebase/firebase.config';
 
 const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
 const Login = () => {
 
     const [user, setUser] = useState(null);
@@ -30,6 +32,16 @@ const Login = () => {
                 console.log(error);
             })
     }
+    const handleGithubButtonClicked = () => {
+        console.log('Button is Clicked!');
+        signInWithPopup(auth, githubProvider)
+            .then((result) => {
+                console.log(result.user.displayName);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
     return (
         <div className='flex flex-col items-center justify-center mt-10 space-y-4'>
             <h2>Please Login!</h2>
@@ -46,8 +58,11 @@ const Login = () => {
                         Sign In With Google
                     </button>
             }
-
-
+            <button className='btn'
+                onClick={handleGithubButtonClicked}>
+                <img src="https://cdn.pixabay.com/photo/2022/01/30/13/33/github-6980894_1280.png" alt="Github" className='h-3/4' />
+                Sign Up With Github
+            </button>
             {
                 user ? (
                     <div>
