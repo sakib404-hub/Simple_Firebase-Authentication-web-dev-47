@@ -4,6 +4,7 @@ import { auth } from '../../firebase/firebase.config';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
+// githubProvider.addScope('user:email')
 
 const Login = () => {
 
@@ -36,7 +37,22 @@ const Login = () => {
         console.log('Button is Clicked!');
         signInWithPopup(auth, githubProvider)
             .then((result) => {
+                console.log(result.user);
                 console.log(result.user.displayName);
+                // setUser(result.user)
+
+                const loggedUser = result.user;
+                if (!loggedUser.email) {
+                    if (loggedUser.providerData) {
+                        const gitProvider = loggedUser.providerData.find((p) => p.providerId === 'github.com')
+                        if (gitProvider && gitProvider.email) {
+                            // console.log(gitProvider.email)
+                            loggedUser.email = gitProvider.email;
+
+                        }
+                    }
+                }
+                setUser(loggedUser);
             })
             .catch((error) => {
                 console.log(error);
